@@ -87,7 +87,7 @@ func personalHandler(w http.ResponseWriter, r *http.Request) {
 	fpage, _ := o.SubredditSubmissions(p.Title, geddit.DefaultPopularity, subOpts) // Get subreddit from title, Default sorting, max 20 posts
 	 t.Execute(w, p) // Execute the template
 	for _, s := range fpage { // Display all posts in order.
-		fmt.Fprintf(w,"<br>Title: %s<br>Author: %s<br>Comments: %v<br>Points: %v<br>URL: <a href=\x22%s\x22>Link</a><br>Reddit URL: <a href=\x22https://www.reddit.com/%s\x22>Click here</a><br><br>", s.Title, s.Author, s.NumComments, s.Score, s.URL,s.Permalink)
+		fmt.Fprintf(w,"<div><br>Title: %s<br>Author: %s<br>Comments: %v<br>Points: %v<br>URL: <a href=\x22%s\x22>Link</a><br>Reddit URL: <a href=\x22https://www.reddit.com/%s\x22>Click here</a></div><br>", s.Title, s.Author, s.NumComments, s.Score, s.URL,s.Permalink)
 	}
 	
 }
