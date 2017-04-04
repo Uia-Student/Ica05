@@ -52,12 +52,13 @@ func main() {
 	//fpage, _ := o.Frontpage(geddit.DefaultPopularity, subOpts)
 	fmt.Println("Registring handlers") // debug
 	http.HandleFunc("/",personalHandler)
+	http.HandleFunc("/about",frontpageHandler)
 	
 		fmt.Println("Starting server on port", Port) // debug
 	http.ListenAndServe(Port, nil) // starter serveren
 }
 func frontpageHandler(w http.ResponseWriter, r *http.Request) {           //debug
-	fmt.Fprintf(w, "Welcome to Nerds With Attitude's front page. Avaible links:")
+	fmt.Fprintf(w, "Welcome to Nerds With Attitude's front page\nThis webpage is a shittier version of Reddit.com\n Write a subreddit at the end of the url to visit it.\n Example: localhost:8001/movies")
 }
 func personalHandler(w http.ResponseWriter, r *http.Request) {
 
