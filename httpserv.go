@@ -4,6 +4,7 @@ import (
 "fmt"
 "github.com/jzelinskie/geddit"
 "log"
+"html/template"
 )
 
 var Port string = ":8001" // lytte port
