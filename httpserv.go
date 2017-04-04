@@ -25,11 +25,10 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	subOpts := geddit.ListingOptions{ //reddit settings
-		Limit: 10,
-	}
-	fpage, _ := o.Frontpage(geddit.DefaultPopularity, subOpts)
-	fmt.Println(fpage)
+	//subOpts := geddit.ListingOptions{ //reddit settings
+	//	Limit: 10,
+	//}
+	//fpage, _ := o.Frontpage(geddit.DefaultPopularity, subOpts)
 	fmt.Println("Starting server on port", Port) // debug
 	http.HandleFunc("/", handler)
 	http.HandleFunc("/testfunc", testfunc)
@@ -61,6 +60,7 @@ func testfunc(w http.ResponseWriter, r *http.Request) {
 	}
 	fpage, _ := o.Frontpage(geddit.DefaultPopularity, subOpts)
 	for _, s := range fpage {
-		fmt.Fprintf(w, "Title: %s\nAuthor: %s\n\n", s.Title, s.Author)
+		fmt.Fprintf(w, "Title: %s\nAuthor: %s\nComments: %v\nPoints: %v\n\n", s.Title, s.Author, s.NumComments, s.Score)
 	}
 }
+
