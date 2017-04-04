@@ -5,11 +5,30 @@ import (
 	"fmt"
 	"github.com/jzelinskie/geddit"
 	"log"
+	"html/template"
+	"io/ioutil"
 )
-
+type Page struct {
+    Title string
+    Body  []byte
+}
 var Port string = ":8001" // lytte port
 
+func (p *Page) save() error {
+    filename := p.Title + ".txt"
+    return ioutil.WriteFile(filename, p.Body, 0600)
+}
+func loadPage(title string) (*Page, error) {
+    filename := title + ".txt"
+    body, err := ioutil.ReadFile(filename)
+    if err != nil {
+        return nil, err
+    }
+    return &Page{Title: title, Body: body}, nil
+}
+
 func main() {
+
 	fmt.Println("Prover aa logge inn...")
 	fmt.Println("Setter oauth info")
 	o, err := geddit.NewOAuthSession(
@@ -32,7 +51,8 @@ func main() {
 	//}
 	//fpage, _ := o.Frontpage(geddit.DefaultPopularity, subOpts)
 	fmt.Println("Registring handlers") // debug
-	http.HandleFunc("/", frontpageHandler)
+	http.HandleFunc("/",personalHandler)
+	http.HandleFunc("/welcome", frontpageHandler)
 	http.HandleFunc("/reddit", redditHandler)
 	http.HandleFunc("/news", worldnewsHandler)
 	http.HandleFunc("/norge", norgeHandler)
@@ -41,6 +61,15 @@ func main() {
 }
 func frontpageHandler(w http.ResponseWriter, r *http.Request) {           //debug
 	fmt.Fprintf(w, "Welcome to Nerds With Attitude's front page. Avaible links:")
+}
+func personalHandler(w http.ResponseWriter, r *http.Request) {
+    title := r.URL.Path[len("/"):]
+    p, err := loadPage(title)
+    if err != nil {
+        p = &Page{Title: title}
+    }
+    t, _ := template.ParseFiles("view.html")
+    t.Execute(w, p)
 }
 
 func redditHandler(w http.ResponseWriter, r *http.Request) {
