@@ -7,10 +7,16 @@ import (
 	"log"
 	"html/template"
 	"io/ioutil"
+	"encoding/json"
 )
 type Page struct {
     Title string
     Body  []byte
+}
+type CJoke struct {
+	Value string `json:"value"`
+	Id string `json:"id"`
+	url string `json:"url"`
 }
 var Port string = ":8001" // lytte port
 
@@ -53,13 +59,29 @@ func main() {
 	fmt.Println("Registring handlers") // debug
 	http.HandleFunc("/",personalHandler) // Add a hook to the handler
 	http.HandleFunc("/about",frontpageHandler) // About page
+	http.HandleFunc("/chuck",chuckHandler)
 	
 		fmt.Println("Starting server on port", Port) // debug
 	http.ListenAndServe(Port, nil) // starter serveren // Ready to serve
 }
+func chuckHandler(w http.ResponseWriter, r *http.Request) {  
+    res, err := http.Get("https://api.chucknorris.io/jokes/random")
+    if err != nil {
+        panic("ops")
+}
+        
+	var Joke = new(CJoke)
+    body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+	panic("opsss2")
+	}
+	json.Unmarshal(body ,&Joke)
+	fmt.Fprintln(w,Joke.Value)
+	fmt.Fprintln(w, "Joke ID:",Joke.Id)
+}
 func frontpageHandler(w http.ResponseWriter, r *http.Request) {          
 	fmt.Fprintf(w, "Welcome to Nerds With Attitude's front page\nThis webpage is a shittier version of Reddit.com\n Write a subreddit at the end of the url to visit it.\n Example: localhost:8001/movies")
-}
+	}
 func personalHandler(w http.ResponseWriter, r *http.Request) {
 
     title := r.URL.Path[len("/"):]
