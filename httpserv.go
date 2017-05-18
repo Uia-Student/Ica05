@@ -67,13 +67,13 @@ func main() {
 func chuckHandler(w http.ResponseWriter, r *http.Request) {  
     res, err := http.Get("https://api.chucknorris.io/jokes/random")
     if err != nil {
-        panic("ops")
+        panic("ops1")
 }
         
 	var Joke = new(CJoke)
     body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-	panic("opsss2")
+	panic("ops2")
 	}
 	json.Unmarshal(body ,&Joke)
 	fmt.Fprintln(w,Joke.Value)
